@@ -6,7 +6,6 @@ import socket
 import time
 import logging
 from google.protobuf.message import Message
-from generated.python.transport.packet_pb2 import TransportPacket
 
 from .utils.connection import ProtoConnection
 
@@ -77,17 +76,21 @@ class HeliosClient:
             self._conn = None
             logger.info("Disconnected from %s:%s", self.host, self.port)
 
-    def send(self, msg: TransportPacket) -> None:
+    def send(self, msg: Message) -> None:
         """Send a protobuf message to the server."""
         self._require_connected()
+
+        assert self._conn is not None
         self._conn.send(msg)
 
-    def recv(self, msg_type: type[TransportPacket]) -> TransportPacket | None:
+    def recv(self, msg_type: type[Message]) -> Message | None:
         """Receive one protobuf message from the server."""
         self._require_connected()
+
+        assert self._conn is not None
         return self._conn.recv(msg_type)
 
-    def send_recv(self, msg: TransportPacket, reply_type: type[TransportPacket]) -> TransportPacket | None:
+    def send_recv(self, msg: Message, reply_type: type[Message]) -> Message | None:
         """Send a message and immediately wait for a reply."""
         self.send(msg)
         return self.recv(reply_type)
