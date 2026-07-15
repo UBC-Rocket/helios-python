@@ -89,10 +89,10 @@ class HeliosClient:
         code = getattr(code_val, "name", str(code_val))
         rid = err.request_id if err.request_id else None
         logger.warning(
-            "Helios EventError: address=%r event_type=%r error_code=%s message=%r "
+            "Helios EventError: address=%r event_name=%r error_code=%s message=%r "
             "request_id=%r",
             err.address,
-            err.event_type,
+            err.event_name,
             code,
             err.message,
             rid,
